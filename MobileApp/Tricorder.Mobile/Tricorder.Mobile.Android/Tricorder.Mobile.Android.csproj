@@ -60,7 +60,6 @@
     <Compile Include="Bluetooth\BluetoothCharacteristic.cs" />
     <Compile Include="Bluetooth\BluetoothDevice.cs" />
     <Compile Include="Bluetooth\BluetoothService.cs" />
-    <Compile Include="Bluetooth\DeviceGattCallback.cs" />
     <Compile Include="Bluetooth\TricorderBluetoothManager.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

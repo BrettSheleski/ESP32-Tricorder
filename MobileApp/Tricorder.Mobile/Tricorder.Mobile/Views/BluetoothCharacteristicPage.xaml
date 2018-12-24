@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Tricorder.Mobile.Converters"
+             x:Class="Tricorder.Mobile.Views.BluetoothCharacteristicPage">
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <Entry Placeholder="Data" Text="{Binding Value, Converter={x:Static converters:ByteArrayToHexConverter.Instance}}" />
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Read Value" Command="{Binding ReadValueCommand}" />
+                <Button Text="Write Value" Command="{Binding WriteValueCommand}" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

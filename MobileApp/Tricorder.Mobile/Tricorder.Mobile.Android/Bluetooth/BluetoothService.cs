@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Java.Util;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +18,14 @@ namespace Tricorder.Mobile.Droid.Bluetooth
             Guid id = new Guid(GattService.Uuid.ToString());
 
             this.Id = id;
+
+            BluetoothCharacteristic characteristic;
+            foreach (var gattCharacteristic in gattService.Characteristics)
+            {
+                characteristic = new BluetoothCharacteristic(gattCharacteristic, this);
+
+                CharacteristicsById[gattCharacteristic.Uuid] = characteristic;
+            }
         }
 
         public Guid Id { get; }
@@ -28,9 +38,11 @@ namespace Tricorder.Mobile.Droid.Bluetooth
             return GetCharacteristicsAsync(CancellationToken.None);
         }
 
+        public Dictionary<UUID, BluetoothCharacteristic> CharacteristicsById { get; } = new Dictionary<UUID, BluetoothCharacteristic>();
+
         public Task<IBluetoothCharacteristic[]> GetCharacteristicsAsync(CancellationToken cancellationToken)
         {
-             return Task.FromResult(GattService.Characteristics.Select(x => (IBluetoothCharacteristic)new BluetoothCharacteristic(x, this)).ToArray());
+            return Task.FromResult(this.CharacteristicsById.Values.Select(x => (IBluetoothCharacteristic)x).ToArray());
         }
     }
 }
