@@ -3,13 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Tricorder.Mobile.Converters"
              x:Class="Tricorder.Mobile.Views.BluetoothCharacteristicPage">
-    <ContentPage.Content>
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-            <Entry Placeholder="Data" Text="{Binding Value, Converter={x:Static converters:ByteArrayToHexConverter.Instance}}" />
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Read Value" Command="{Binding ReadValueCommand}" />
-                <Button Text="Write Value" Command="{Binding WriteValueCommand}" />
-            </StackLayout>
-        </StackLayout>
-    </ContentPage.Content>
+
+    <Grid>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition  />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="End" Text="Bytes" />
+        <Label Grid.Row="1" Grid.Column="0" HorizontalTextAlignment="End" Text="String" />
+        <Label Grid.Row="2" Grid.Column="0" HorizontalTextAlignment="End" Text="Integer" />
+
+        <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Value, Converter={x:Static converters:ByteArrayToHexConverter.Instance}}" />
+        <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Value, Converter={x:Static converters:ByteArrayToStringConverter.Instance}, Mode=OneWay}" IsEnabled="False" />
+        <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Value, Converter={x:Static converters:ByteArrayToIntConverter.Instance}, Mode=OneWay}" IsEnabled="False" />
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Padding="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Text="Read Value" Command="{Binding ReadValueCommand}" />
+            <Button Grid.Column="1" Text="Write Value" Command="{Binding WriteValueCommand}" />
+        </Grid>
+
+        <ActivityIndicator Grid.Row="4" Grid.ColumnSpan="2" IsRunning="{Binding IsBusy}" />
+    </Grid>
 </ContentPage>

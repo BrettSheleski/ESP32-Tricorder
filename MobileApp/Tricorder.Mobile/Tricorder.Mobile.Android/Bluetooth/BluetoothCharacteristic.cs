@@ -14,12 +14,13 @@ namespace Tricorder.Mobile.Droid.Bluetooth
         {
             this.Service = service;
             this.GattCharacteristic = gattCharacteristic;
-
+            
             this.Id = new Guid(gattCharacteristic.Uuid.ToString());
         }
 
         public Guid Id { get; }
-        
+        public TaskCompletionSource<byte[]> GetValueCompletionSource { get; set; }
+
         public Task<byte[]> GetValueAsync()
         {
             return GetValueAsync(CancellationToken.None);
@@ -27,7 +28,14 @@ namespace Tricorder.Mobile.Droid.Bluetooth
 
         public Task<byte[]> GetValueAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.GattCharacteristic.GetValue());
+            if (GetValueCompletionSource == null)
+            {
+                this.GetValueCompletionSource = new TaskCompletionSource<byte[]>();
+                
+                Service.Device.Gatt.ReadCharacteristic(this.GattCharacteristic);
+            }
+            
+            return GetValueCompletionSource.Task;
         }
 
         public Task SetValueAsync(byte[] value)

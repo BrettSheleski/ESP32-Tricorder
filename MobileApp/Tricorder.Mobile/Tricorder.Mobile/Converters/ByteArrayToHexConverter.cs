@@ -37,4 +37,5 @@ namespace Tricorder.Mobile.Converters
             return value;
         }
     }
+
 }

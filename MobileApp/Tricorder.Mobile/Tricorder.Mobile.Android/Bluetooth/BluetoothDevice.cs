@@ -31,11 +31,12 @@ namespace Tricorder.Mobile.Droid.Bluetooth
         {
             if (!IsConnected)
             {
-                PlatformDevice.ConnectGatt(Application.Context, true, this);
+                this.Gatt = PlatformDevice.ConnectGatt(Application.Context, true, this);
                 IsConnected = true;
             }
         }
 
+        public bt.BluetoothGatt Gatt { get; private set; }
         public bool IsConnected { get; private set; }
 
         private bool _servicesDiscovered = false;
@@ -91,7 +92,7 @@ namespace Tricorder.Mobile.Droid.Bluetooth
             base.OnServicesDiscovered(gatt, status);
 
             ServicesDiscovered?.Invoke(this, new ServicesDiscoveredEventArgs(gatt, status));
-
+            
             _servicesDiscovered = true;
         }
         
@@ -112,6 +113,8 @@ namespace Tricorder.Mobile.Droid.Bluetooth
             base.OnCharacteristicChanged(gatt, characteristic);
 
             CharacteristicChanged?.Invoke(this, new CharacteristicChangedEventArgs(gatt, characteristic));
+
+            
         }
 
         public override void OnCharacteristicWrite(bt.BluetoothGatt gatt, bt.BluetoothGattCharacteristic characteristic, [GeneratedEnum] bt.GattStatus status)
@@ -126,6 +129,19 @@ namespace Tricorder.Mobile.Droid.Bluetooth
             base.OnCharacteristicRead(gatt, characteristic, status);
 
             this.CharacteristicRead?.Invoke(this, new CharacteristicValueChangedEventArgs(gatt, characteristic, status));
+            
+            byte[] value = characteristic.GetValue();
+
+            var myChar = this.ServicesById[characteristic.Service.Uuid].CharacteristicsById[characteristic.Uuid];
+
+            // If the system architecture is little-endian (that is, little end first),
+            // reverse the byte array.
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(value);
+
+            myChar.GetValueCompletionSource?.SetResult(value);
+            myChar.GetValueCompletionSource = null;
+
         }
 
 
