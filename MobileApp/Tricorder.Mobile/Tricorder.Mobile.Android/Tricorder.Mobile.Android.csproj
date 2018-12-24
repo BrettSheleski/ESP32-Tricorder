@@ -15,8 +15,7 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -58,6 +57,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bluetooth\BluetoothCharacteristic.cs" />
+    <Compile Include="Bluetooth\BluetoothDevice.cs" />
+    <Compile Include="Bluetooth\BluetoothService.cs" />
+    <Compile Include="Bluetooth\DeviceGattCallback.cs" />
+    <Compile Include="Bluetooth\TricorderBluetoothManager.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,6 +97,10 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Tricorder\Tricorder.csproj">
+      <Project>{57401dd5-477e-45dc-be8e-d5d0fef8e84a}</Project>
+      <Name>Tricorder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tricorder.Mobile\Tricorder.Mobile.csproj">
       <Project>{EA2DFC3A-ECA1-4381-846B-0D703199C662}</Project>
       <Name>Tricorder.Mobile</Name>

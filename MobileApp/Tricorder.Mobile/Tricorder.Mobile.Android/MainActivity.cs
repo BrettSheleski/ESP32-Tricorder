@@ -18,6 +18,10 @@ namespace Tricorder.Mobile.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
+            
+            Xamarin.Forms.DependencyService.Register<IBluetoothManager, Bluetooth.TricorderBluetoothManager>();
+
+            Bluetooth.TricorderBluetoothManager.Activity = this;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());

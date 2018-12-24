@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:converters="clr-namespace:Tricorder.Mobile.Converters"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="{Binding Device.Name}"
+             x:Class="Tricorder.Mobile.Views.BluetoothDeviceDetailsPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Text="Services" HorizontalTextAlignment="Center" />
+        <ListView Grid.Row="1" 
+                  IsPullToRefreshEnabled="True" 
+                  IsGroupingEnabled="True" 
+                  RefreshCommand="{Binding UpdateServicesCommand}" 
+                  IsRefreshing="{Binding IsBusy}" 
+                  ItemsSource="{Binding Services}"
+                  GroupDisplayBinding="{Binding Service.Id, Converter={x:Static converters:GuidToStringConverter.Instance}}"
+                  >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Id, Converter={x:Static converters:GuidToStringConverter.Instance}}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>
