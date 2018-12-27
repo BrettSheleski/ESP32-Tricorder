@@ -43,16 +43,19 @@ namespace Tricorder.Mobile.Droid.Bluetooth
 
         public Dictionary<UUID, BluetoothService> ServicesById { get; } = new Dictionary<UUID, BluetoothService>();
 
-        public Task<IBluetoothService[]> GetServicesAsync(CancellationToken cancellationToken)
+        public async Task<IBluetoothService[]> GetServicesAsync(CancellationToken cancellationToken)
         {
             if (_servicesDiscovered)
             {
-                return Task.FromResult(ServicesById.Values.Select(x => (IBluetoothService)x).ToArray());
+                return ServicesById.Values.Select(x => (IBluetoothService)x).ToArray();
             }
             else
             {
                 TaskCompletionSource<IBluetoothService[]> tcs = new TaskCompletionSource<IBluetoothService[]>();
 
+                CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                cts.CancelAfter(TimeSpan.FromSeconds(5));
+                
                 EventHandler<ServicesDiscoveredEventArgs> eventHandler = null;
 
                 eventHandler = (o, e) =>
@@ -68,16 +71,26 @@ namespace Tricorder.Mobile.Droid.Bluetooth
                         servicesList.Add(service);
                     }
                     
-                    this.ServicesDiscovered -= eventHandler;
-
-                    tcs.SetResult(servicesList.ToArray());
+                    
+                    tcs.TrySetResult(servicesList.ToArray());
                 };
 
                 this.ServicesDiscovered += eventHandler;
 
-                Connect();
-                
-                return tcs.Task;
+
+                try
+                {
+                    using (cts.Token.Register(() => tcs.TrySetResult(new IBluetoothService[] { }), false))
+                    {
+                        Connect();
+
+                        return await tcs.Task.ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                }
+                finally
+                {
+                    this.ServicesDiscovered -= eventHandler;
+                }
             }
         }
 
