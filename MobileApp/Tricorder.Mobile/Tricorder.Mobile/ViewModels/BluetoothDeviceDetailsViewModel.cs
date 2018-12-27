@@ -70,9 +70,9 @@ namespace Tricorder.Mobile.ViewModels
             }
         }
 
-        public async Task InitializeAsync()
+        public override Task InitializeAsync()
         {
-            await UpdateServicesAsync();
+            return UpdateServicesAsync();
         }
 
         public class ServiceInfo : List<IBluetoothCharacteristic>

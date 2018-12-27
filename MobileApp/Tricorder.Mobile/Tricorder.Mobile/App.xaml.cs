@@ -8,17 +8,25 @@ namespace Tricorder.Mobile
 {
     public partial class App : Application
     {
-
         public App()
         {
             InitializeComponent();
-            
-            MainPage = new NavigationPage(new BluetoothDeviceListPage
+
+            MainPage = new TricorderPage
             {
-                BindingContext = new ViewModels.BluetoothDeviceListViewModel()
-            });
+                BindingContext = new ViewModels.TricorderViewModel()
+            };
         }
 
+        protected async override void OnStart()
+        {
+            base.OnStart();
+            
+            if (MainPage?.BindingContext is ViewModels.BaseViewModel vm)
+            {
+                await vm.InitializeAsync();
+            }
+        }
 
     }
 }

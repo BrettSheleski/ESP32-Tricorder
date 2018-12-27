@@ -34,7 +34,7 @@ namespace Tricorder.Mobile.ViewModels
         public AsyncCommand ReadValueCommand { get; }
         public AsyncCommand WriteValueCommand { get; }
 
-        public Task InitializeAsync()
+        public override Task InitializeAsync()
         {
             return Task.CompletedTask;
         }
