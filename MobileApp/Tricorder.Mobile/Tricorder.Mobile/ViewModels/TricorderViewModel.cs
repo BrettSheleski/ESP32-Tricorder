@@ -29,7 +29,7 @@ namespace Tricorder.Mobile.ViewModels
                 byte[] fartBytes = await FartCharacteristic?.GetValueAsync();
 
                 byte[] bytesCopy = new byte[fartBytes.Length];
-                
+
                 fartBytes.CopyTo(bytesCopy, 0);
 
                 if (BitConverter.IsLittleEndian)
@@ -49,19 +49,19 @@ namespace Tricorder.Mobile.ViewModels
             CurrentDevice = null;
 
             var devices = await BluetoothManager.GetDevicesAsync();
-            
+
             Task<IBluetoothService[]>[] tasks = devices.Select(d => d.GetServicesAsync()).ToArray();
 
             await Task.WhenAll(tasks);
 
-            for(int i = 0; i < tasks.Length; ++i)
+            for (int i = 0; i < tasks.Length; ++i)
             {
                 if (tasks[i].Result.Any(s => s.Id == Bluetooth.TricorderServiceId))
                 {
                     AvailableDevices.Add(devices[i]);
                 }
             }
-            
+
             if (AvailableDevices.Count > 0 && CurrentDevice == null)
             {
                 CurrentDevice = AvailableDevices[0];
@@ -88,8 +88,8 @@ namespace Tricorder.Mobile.ViewModels
         {
             IsMenuDisplayed = false;
             var services = await value.GetServicesAsync();
-            
-            foreach(var service in services)
+
+            foreach (var service in services)
             {
                 var characteristics = await service.GetCharacteristicsAsync();
 
@@ -118,6 +118,7 @@ namespace Tricorder.Mobile.ViewModels
         }
         public int Fart { get => _fart; set => SetProperty(ref _fart, value); }
         public IBluetoothCharacteristic FartCharacteristic { get => _fartCharacteristic; set => SetProperty(ref _fartCharacteristic, value); }
+        public DateTime Clock { get => _clock; set => SetProperty(ref _clock, value); }
 
         public override async Task InitializeAsync()
         {
@@ -125,12 +126,24 @@ namespace Tricorder.Mobile.ViewModels
 
             await UpdateDeviceListAsync();
 
-            Xamarin.Forms.Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-            {
-                UpdateFartCommand.Execute(null);
-                return true;
-            });
+            Xamarin.Forms.Device.StartTimer(TimeSpan.FromSeconds(1), TimerTick);
         }
+
+        private bool TimerTick()
+        {
+            Task.Run(UpdateAsync);
+
+            return true;
+        }
+
+        private async Task UpdateAsync()
+        {
+            await UpdateFartAsync();
+
+            Clock = DateTime.Now;
+        }
+
+        private DateTime _clock = DateTime.Now;
 
         private async Task<bool> IsDeviceTricorderAsync(IBluetoothDevice device)
         {

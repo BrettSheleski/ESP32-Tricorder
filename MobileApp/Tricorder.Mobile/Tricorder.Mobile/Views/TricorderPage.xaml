@@ -2,7 +2,7 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Tricorder.Mobile.Converters"
-             IsPresented="{Binding IsMenuDisplayed}"
+             IsPresented="{Binding IsMenuDisplayed, Mode=TwoWay}"
              x:Class="Tricorder.Mobile.Views.TricorderPage">
     <MasterDetailPage.Resources>
         <ResourceDictionary>
@@ -30,29 +30,131 @@
     <MasterDetailPage.Detail>
         <NavigationPage Title="Tricorder">
             <x:Arguments>
-                <ContentPage Title="{Binding Title}" NavigationPage.HasNavigationBar="False">
-                    <Grid>
-                        <Grid IsVisible="{Binding CurrentDevice, Converter={x:Static converters:IsNullConverter.Instance}}">
-                            <Label Text="No Tricorder device detected." FontSize="Large"  VerticalOptions="Center" HorizontalTextAlignment="Center" />
-                        </Grid>
-                        <Grid IsVisible="{Binding CurrentDevice, Converter={x:Static converters:IsNotNullConverter.Instance}}">
-                            <Label Text="{Binding Fart}" FontSize="200"  VerticalOptions="Center" HorizontalTextAlignment="Center" />
-                        </Grid>
-                        <Frame BorderColor="DarkGray" Padding="0" CornerRadius="5" WidthRequest="25" HeightRequest="25" HorizontalOptions="Start" VerticalOptions="Start" Margin="15">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ShowMenuCommand}" />
-                            </Frame.GestureRecognizers>
-                            <Grid >
+                <ContentPage Title="{Binding Title}" NavigationPage.HasNavigationBar="False" BackgroundColor="Black">
+
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="4*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid RowSpacing="0" ColumnSpacing="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="15" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="10" />
+                            </Grid.RowDefinitions>
+
+
+                            <BoxView Grid.Row="0" Grid.Column="1" BackgroundColor="#9B98FE" />
+                            <BoxView Grid.Row="0" Grid.Column="1" BackgroundColor="Black" CornerRadius="0, 0, 30, 0" />
+
+                            <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="6">
+
+                                <Label TextColor="White" HorizontalOptions="End" VerticalOptions="Start" Margin="5" Text="{Binding Clock, StringFormat='{0:h:mm tt}'}"/>
+
+                            </Grid>
+                            
+                            <Grid Grid.Row="0" Grid.Column="0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
+                                </Grid.RowDefinitions>
+
+                                <ContentView Grid.Row="0" BackgroundColor="#C498C4" Padding="15">
+                                    <ContentView.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ShowMenuCommand}" />
+                                    </ContentView.GestureRecognizers>
+                                    <Label Text="Settings" VerticalOptions="End" HorizontalOptions="End" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                </ContentView>
+
+                                <ContentView Grid.Row="1" BackgroundColor="#9B98FE" Padding="15">
+                                    <Label Text="Something" VerticalOptions="Start" HorizontalOptions="End" HorizontalTextAlignment="End" />
+                                </ContentView>
+
+
+                            </Grid>
+
+                            <BoxView Grid.Row="1" Grid.Column="0" BackgroundColor="#9B98FE" CornerRadius="0, 0, 30, 0" />
+                            <BoxView Grid.Row="1" Grid.Column="1" BackgroundColor="#9B98FE" />
+                            <BoxView Grid.Row="1" Grid.Column="2" BackgroundColor="#9B98FE" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Row="1" Grid.Column="3" BackgroundColor="#FE9800" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Row="1" Grid.Column="4" BackgroundColor="#C498C4" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Row="1" Grid.Column="5" BackgroundColor="#C498C4" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Row="1" Grid.Column="6" BackgroundColor="#CC6061" HeightRequest="20" />
+
+                        </Grid>
+
+                        <Grid ColumnSpacing="0" RowSpacing="0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="15" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <BoxView Grid.Column="0" BackgroundColor="#CC6666" CornerRadius="30, 0, 0, 0" />
+                            <BoxView Grid.Column="1" BackgroundColor="#CC6666" />
+                            <BoxView Grid.Column="2" BackgroundColor="#CC6666" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Column="3" BackgroundColor="#FEB880" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Column="4" BackgroundColor="#FCB77F" HeightRequest="5" Margin="0, 0, 5, 0" VerticalOptions="Start" />
+                            <BoxView Grid.Column="5" BackgroundColor="#C498C4" Margin="0, 0, 5, 0" />
+                            <BoxView Grid.Column="6" BackgroundColor="#FE9800" HeightRequest="20" />
+
+                            <Grid Grid.Row="1" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <Frame Grid.Row="0" BorderColor="DarkGray" CornerRadius="3" HeightRequest="6" />
-                                <Frame Grid.Row="1" BorderColor="DarkGray" CornerRadius="3" HeightRequest="6" />
-                                <Frame Grid.Row="2" BorderColor="DarkGray" CornerRadius="3" HeightRequest="6" />
+
+                                <ContentView Grid.Row="0" BackgroundColor="#CC6666" Padding="15">
+                                    <Label Text="Methane" VerticalOptions="End" HorizontalOptions="End" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                                </ContentView>
+
+                                <ContentView Grid.Row="1" BackgroundColor="#CC6666" Padding="15">
+                                    <Label Text="Temperature" VerticalOptions="End" HorizontalOptions="End" HorizontalTextAlignment="End" />
+                                </ContentView>
+
+                                <ContentView Grid.Row="2" BackgroundColor="#FE9800" Padding="15">
+                                    <Label Text="Distance" VerticalOptions="End" HorizontalOptions="End" HorizontalTextAlignment="End" />
+                                </ContentView>
+
+                                <ContentView Grid.Row="3" BackgroundColor="#FFA873" Padding="15">
+                                    <Label Text="Noise" VerticalOptions="Start" HorizontalOptions="End" HorizontalTextAlignment="End" />
+                                </ContentView>
+
                             </Grid>
-                        </Frame>
+
+                            <BoxView Grid.Row="1" Grid.Column="1" BackgroundColor="#CC6666" />
+                            <BoxView Grid.Row="1" Grid.Column="1" BackgroundColor="Black" CornerRadius="30, 0, 0, 0" />
+
+                            <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="6">
+                                <Grid IsVisible="{Binding CurrentDevice, Converter={x:Static converters:IsNullConverter.Instance}}">
+                                    <Label Text="No Tricorder device detected." FontSize="Large"  VerticalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" />
+                                </Grid>
+                                <Grid IsVisible="{Binding CurrentDevice, Converter={x:Static converters:IsNotNullConverter.Instance}}">
+                                    <Label Text="{Binding Fart}" FontSize="100"  VerticalOptions="Center" HorizontalTextAlignment="Center" TextColor="White" />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                     </Grid>
                 </ContentPage>
             </x:Arguments>

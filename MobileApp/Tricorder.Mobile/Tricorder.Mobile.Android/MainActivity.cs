@@ -17,6 +17,18 @@ namespace Tricorder.Mobile.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+            {
+                // Kill status bar underlay added by FormsAppCompatActivity
+                // Must be done before calling FormsAppCompatActivity.OnCreate()
+                var statusBarHeightInfo = typeof(Xamarin.Forms.Platform.Android.FormsAppCompatActivity).GetField("statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                if (statusBarHeightInfo == null)
+                {
+                    statusBarHeightInfo = typeof(Xamarin.Forms.Platform.Android.FormsAppCompatActivity).GetField("_statusBarHeight", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                }
+                statusBarHeightInfo?.SetValue(this, 0);
+            }
+
             base.OnCreate(bundle);
 
             if (IsEmulator())
@@ -66,7 +78,11 @@ namespace Tricorder.Mobile.Droid
             Bluetooth.TricorderBluetoothManager.Activity = this;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            
+            this.Window.AddFlags(WindowManagerFlags.Fullscreen | WindowManagerFlags.TurnScreenOn);
+
             LoadApplication(new App());
+
         }
 
         public static bool IsEmulator()
