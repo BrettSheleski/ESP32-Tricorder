@@ -10,10 +10,15 @@ void setup() {
   Serial.begin(115200);
 
   tricorder = new Tricorder();
-  tricorder->AddSensor(new FartSensor(tricorder, ADC1_CHANNEL_6)); // GPIO 34
+
+  FartSensor* fartSensor = new FartSensor(tricorder, ADC1_CHANNEL_6, 15);// GPIO 34, 2
+
+  tricorder->AddSensor(fartSensor); 
   tricorder->AddSensor(new Blinker(tricorder));
 
   tricorder->Start();
+
+  fartSensor->Enable();
 }
 
 void loop() {

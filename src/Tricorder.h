@@ -76,13 +76,11 @@ public:
     }
 
     Tricorder(char *name){
-        BLEDevice::init(name);
-
-        BLEServer* server = BLEDevice::createServer();
-
         if (!BLEDevice::getInitialized()){
-            
+            BLEDevice::init(name);
         }
+        
+        BLEServer* server = BLEDevice::createServer();
 
         Init(server);
     }
@@ -118,9 +116,6 @@ public:
         _sensors[_sensorCount] = sensor;
         ++_sensorCount;
     }
-
-
-    
 };
 
 #endif
