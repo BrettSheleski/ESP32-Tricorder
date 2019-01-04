@@ -26,7 +26,7 @@ namespace Tricorder.Mobile.ViewModels
         {
             if (FartCharacteristic != null)
             {
-                byte[] fartBytes = await FartCharacteristic?.GetValueAsync();
+                byte[] fartBytes = await FartCharacteristic.GetValueAsync();
 
                 byte[] bytesCopy = new byte[fartBytes.Length];
 
